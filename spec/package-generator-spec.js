@@ -1,218 +1,91 @@
-const path = require('path')
-const fs = require('fs-plus')
-const temp = require('temp')
-const PackageGeneratorView = require('../lib/package-generator-view')
+const fs = require("node:fs");
+const os = require("node:os");
+const path = require("node:path");
+const PackageGeneratorView = require("../lib/package-generator-view");
+const { generatePackage } = require("../lib/templates");
 
-const {it, fit, ffit, afterEach, beforeEach, conditionPromise} = require('./async-spec-helpers') // eslint-disable-line no-unused-vars
+describe("Package Generator", () => {
+  let view;
 
-describe('Package Generator', () => {
-  let packageGeneratorView = null
+  beforeEach(() => {
+    jasmine.attachToDOM(lumine.views.getView(lumine.workspace));
+    view = new PackageGeneratorView();
+  });
 
-  const getWorkspaceView = () => atom.views.getView(atom.workspace)
+  afterEach(() => {
+    delete process.env.LUMINE_REPOS_HOME;
+    view.destroy();
+  });
 
-  const typeToPackageNameMap = new Map([
-    ['package', 'my-package'],
-    ['language', 'language-my-language'],
-    ['theme', 'my-theme-syntax']
-  ])
+  it("opens the package prompt with the expected name selected", () => {
+    process.env.LUMINE_REPOS_HOME = path.join(os.tmpdir(), "lumine-repositories");
+    view.attach("package");
+    expect(view.panel.isVisible()).toBe(true);
+    expect(view.miniEditor.getText()).toBe(path.join(process.env.LUMINE_REPOS_HOME, "my-package"));
+    expect(view.miniEditor.getSelectedText()).toBe("my-package");
+  });
 
-  const typeToSelectedTextMap = new Map([
-    ['package', 'my-package'],
-    ['language', 'my-language'],
-    ['theme', 'my-theme']
-  ])
+  it("selects only the customizable language name", () => {
+    view.attach("language");
+    expect(view.miniEditor.getSelectedText()).toBe("my-language");
+  });
 
-  beforeEach(async () => {
-    await atom.workspace.open('sample.js')
+  it("normalizes package names to lowercase dashes", () => {
+    view.miniEditor.setText(path.join(os.tmpdir(), "CamelCase_is Great"));
+    expect(path.basename(view.getPackagePath())).toBe("camel-case-is-great");
+  });
+});
 
-    packageGeneratorView = new PackageGeneratorView()
-  })
+describe("generated scaffolds", () => {
+  let root;
 
-  for (const [type, name] of typeToPackageNameMap) {
-    describe(`when generating a ${type}`, () => {
-      it('displays a mini-editor with the correct text and selection', () => {
-        packageGeneratorView.attach(type)
-        const editor = packageGeneratorView.miniEditor
-        expect(editor.getSelectedText()).toEqual(typeToSelectedTextMap.get(type))
-        const base = atom.config.get('core.projectHome')
-        expect(editor.getText()).toEqual(path.join(base, name))
-      })
-    })
+  beforeEach(() => {
+    root = fs.mkdtempSync(path.join(os.tmpdir(), "lumine-package-generator-"));
+  });
+
+  afterEach(() => {
+    fs.rmSync(root, { recursive: true, force: true });
+  });
+
+  function generate(mode, name) {
+    const target = path.join(root, name);
+    waitsForPromise(async () => {
+      await generatePackage(mode, target);
+    });
+    return target;
   }
 
-  describe('when ATOM_REPOS_HOME is set', () => {
-    beforeEach(() => {
-      process.env.ATOM_REPOS_HOME = '/atom/repos/home'
-    })
+  it("creates a modern editor package", () => {
+    const target = generate("package", "sample-tools");
+    runs(() => {
+      const manifest = JSON.parse(fs.readFileSync(path.join(target, "package.json")));
+      expect(manifest.engines).toEqual({ lumine: "^1.0.0" });
+      expect(manifest.activationCommands["lumine-workspace"]).toEqual(["sample-tools:toggle"]);
+      expect(fs.existsSync(path.join(target, "lib", "main.js"))).toBe(true);
+      expect(fs.existsSync(path.join(target, "styles", "sample-tools.css"))).toBe(true);
+    });
+  });
 
-    afterEach(() => {
-      delete process.env.ATOM_REPOS_HOME
-    })
+  it("creates a JSON language grammar", () => {
+    const target = generate("language", "language-sample");
+    runs(() => {
+      const grammar = JSON.parse(
+        fs.readFileSync(path.join(target, "grammars", "sample.json"), "utf8"),
+      );
+      expect(grammar.scopeName).toBe("source.sample");
+      expect(grammar.patterns).toEqual([]);
+    });
+  });
 
-    it('overrides the default path', () => {
-      packageGeneratorView.attach('package')
-      const editor = packageGeneratorView.miniEditor
-      expect(editor.getSelectedText()).toEqual('my-package')
-      const base = '/atom/repos/home'
-      expect(editor.getText()).toEqual(path.join(base, 'my-package'))
-    })
-  })
-
-  describe('when the modal panel is canceled', () => {
-    it('detaches from the DOM and focuses the the previously focused element', () => {
-      jasmine.attachToDOM(getWorkspaceView())
-      packageGeneratorView.attach('theme')
-      expect(packageGeneratorView.previouslyFocusedElement).not.toBeUndefined()
-
-      expect(document.activeElement.closest('atom-text-editor')).toBe(packageGeneratorView.element.querySelector('atom-text-editor'))
-
-      packageGeneratorView.close()
-      expect(atom.workspace.getModalPanels()[0].isVisible()).toBe(false)
-      expect(document.activeElement.closest('atom-text-editor')).toBe(atom.views.getView(atom.workspace.getActiveTextEditor()))
-    })
-  })
-
-  describe('when a package is generated', () => {
-    let [packageName, packagePath, packageRoot] = []
-
-    const packageInitCommandFor = (path, type = 'package', syntax = atom.config.get('package-generator.packageSyntax')) => {
-      if (type !== 'theme') {
-        return ['init', `--${type}`, path, '--syntax', syntax]
-      } else {
-        return ['init', `--${type}`, path]
-      }
-    }
-
-    beforeEach(() => {
-      spyOn(atom, 'open')
-
-      packageRoot = temp.mkdirSync('atom')
-      packageName = 'sweet-package-dude'
-      packagePath = path.join(packageRoot, packageName)
-      fs.removeSync(packageRoot)
-    })
-
-    afterEach(() => fs.removeSync(packageRoot))
-
-    it("forces the package's name to be lowercase with dashes", () => {
-      packageName = 'CamelCaseIsForTheBirds'
-      packagePath = path.join(path.dirname(packagePath), packageName)
-
-      packageGeneratorView.attach('package')
-      const editor = packageGeneratorView.miniEditor
-      editor.setText(packagePath)
-      const apmExecute = spyOn(packageGeneratorView, 'runCommand')
-      packageGeneratorView.confirm()
-
-      expect(apmExecute).toHaveBeenCalled()
-      expect(apmExecute.mostRecentCall.args[0]).toBe(atom.packages.getApmPath())
-      expect(apmExecute.mostRecentCall.args[1]).toEqual(packageInitCommandFor(`${path.join(path.dirname(packagePath), 'camel-case-is-for-the-birds')}`))
-    })
-
-    it("normalizes the package's path", () => {
-      packagePath = path.join('~', 'the-package')
-
-      packageGeneratorView.attach('package')
-      const editor = packageGeneratorView.miniEditor
-      editor.setText(packagePath)
-      const apmExecute = spyOn(packageGeneratorView, 'runCommand')
-      packageGeneratorView.confirm()
-
-      expect(apmExecute).toHaveBeenCalled()
-      expect(apmExecute.mostRecentCall.args[0]).toBe(atom.packages.getApmPath())
-      expect(apmExecute.mostRecentCall.args[1]).toEqual(packageInitCommandFor(`${fs.normalize(packagePath)}`))
-    })
-
-    for (const type of typeToPackageNameMap.keys()) {
-      describe(`when creating a ${type}`, () => {
-        let apmExecute = null
-
-        const generatePackage = async (insidePackagesDirectory) => {
-          const editor = packageGeneratorView.miniEditor
-          spyOn(packageGeneratorView, 'isStoredInDotAtom').andReturn(insidePackagesDirectory)
-          expect(packageGeneratorView.element.parentElement).toBeTruthy()
-          editor.setText(packagePath)
-          apmExecute = spyOn(packageGeneratorView, 'runCommand').andCallFake((command, args, exit) => process.nextTick(() => exit()))
-          packageGeneratorView.confirm()
-          await conditionPromise(() => atom.open.callCount === 1)
-          expect(atom.open).toHaveBeenCalledWith({pathsToOpen: [packagePath]})
-        }
-
-        beforeEach(() => {
-          jasmine.useRealClock()
-          jasmine.attachToDOM(getWorkspaceView())
-          packageGeneratorView.attach(type)
-        })
-
-        describe(`when the ${type} is created outside of the packages directory`, () => {
-          describe('when package-generator.createInDevMode is set to false', () => {
-            it('calls `apm init` and `apm link`', async () => {
-              atom.config.set('package-generator.createInDevMode', false)
-
-              await generatePackage(false)
-              expect(apmExecute.argsForCall[0][0]).toBe(atom.packages.getApmPath())
-              expect(apmExecute.argsForCall[0][1]).toEqual(packageInitCommandFor(`${packagePath}`, type))
-              expect(apmExecute.argsForCall[1][0]).toBe(atom.packages.getApmPath())
-              expect(apmExecute.argsForCall[1][1]).toEqual(['link', `${packagePath}`])
-            })
-          })
-
-          describe('when package-generator.createInDevMode is set to true', () => {
-            it('calls `apm init` and `apm link --dev`', async () => {
-              atom.config.set('package-generator.createInDevMode', true)
-
-              await generatePackage(false)
-              expect(apmExecute.argsForCall[0][0]).toBe(atom.packages.getApmPath())
-              expect(apmExecute.argsForCall[0][1]).toEqual(packageInitCommandFor(`${packagePath}`, type))
-              expect(apmExecute.argsForCall[1][0]).toBe(atom.packages.getApmPath())
-              expect(apmExecute.argsForCall[1][1]).toEqual(['link', '--dev', `${packagePath}`])
-            })
-          })
-        })
-
-        describe(`when the ${type} is created inside the packages directory`, () => {
-          it('calls `apm init`', async () => {
-            await generatePackage(true)
-            expect(apmExecute.argsForCall[0][0]).toBe(atom.packages.getApmPath())
-            expect(apmExecute.argsForCall[0][1]).toEqual(packageInitCommandFor(`${packagePath}`, type))
-            expect(atom.open.argsForCall[0][0].pathsToOpen[0]).toBe(packagePath)
-            expect(apmExecute.argsForCall[1]).toBeUndefined()
-          })
-        })
-
-        describe(`when the ${type} is a coffeescript package`, () => {
-          it('calls `apm init` with the correct syntax option', async () => {
-            atom.config.set('package-generator.packageSyntax', 'coffeescript')
-            await generatePackage(true)
-            expect(apmExecute.argsForCall[0][0]).toBe(atom.packages.getApmPath())
-            expect(apmExecute.argsForCall[0][1]).toEqual(packageInitCommandFor(`${packagePath}`, type, 'coffeescript'))
-          })
-        })
-
-        describe(`when the ${type} is a javascript package`, () => {
-          it('calls `apm init` with the correct syntax option', async () => {
-            atom.config.set('package-generator.packageSyntax', 'javascript')
-            await generatePackage(true)
-            expect(apmExecute.argsForCall[0][0]).toBe(atom.packages.getApmPath())
-            expect(apmExecute.argsForCall[0][1]).toEqual(packageInitCommandFor(`${packagePath}`, type, 'javascript'))
-          })
-        })
-
-        describe(`when the ${type} path already exists`, () => {
-          it('displays an error', () => {
-            fs.makeTreeSync(packagePath)
-
-            const editor = packageGeneratorView.miniEditor
-            editor.setText(packagePath)
-            expect(packageGeneratorView.element.parentElement).toBeTruthy()
-            expect(packageGeneratorView.element.querySelector('.error').offsetHeight).toBe(0)
-
-            packageGeneratorView.confirm()
-            expect(packageGeneratorView.element.parentElement).toBeTruthy()
-            expect(packageGeneratorView.element.querySelector('.error').offsetHeight).not.toBe(0)
-          })
-        })
-      })
-    }
-  })
-})
+  it("creates a CSS syntax theme", () => {
+    const target = generate("theme", "sample-syntax");
+    runs(() => {
+      const manifest = JSON.parse(fs.readFileSync(path.join(target, "package.json"), "utf8"));
+      expect(manifest.themes).toEqual([
+        { name: "sample-syntax", theme: "syntax", styles: "styles/variables" },
+      ]);
+      const stylesheet = fs.readFileSync(path.join(target, "styles", "variables.css"), "utf8");
+      expect(stylesheet).toContain("--syntax-background-color");
+    });
+  });
+});

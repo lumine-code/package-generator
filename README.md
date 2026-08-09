@@ -1,7 +1,31 @@
-##### Atom and all repositories under Atom will be archived on December 15, 2022. Learn more in our [official announcement](https://github.blog/2022-06-08-sunsetting-atom/)
- # Package Generator package
-[![OS X Build Status](https://travis-ci.org/atom/package-generator.svg?branch=master)](https://travis-ci.org/atom/package-generator)
-[![Windows Build Status](https://ci.appveyor.com/api/projects/status/7t1i4hdmljhigp9u/branch/master?svg=true)](https://ci.appveyor.com/project/Atom/package-generator/branch/master) [![Dependency Status](https://david-dm.org/atom/package-generator.svg)](https://david-dm.org/atom/package-generator)
+# package-generator
 
+Generate ready-to-edit packages, languages, and syntax themes.
 
-Generates and opens a new sample package, language, or syntax theme in Atom.
+## Features
+
+- **Package scaffolds**: creates a JavaScript package with a command, CSS, specs, and current quality tooling.
+- **Language scaffolds**: creates a JSON grammar with file recognition and a loading spec.
+- **Syntax theme scaffolds**: creates a CSS custom-property palette and a registered syntax theme.
+- **Development links**: links generated projects into `packages` or `packages-dev` without overwriting an existing entry.
+- **Project handoff**: adds the generated project to the current workspace immediately.
+
+## Installation
+
+To install `package-generator` search for _package-generator_ in the Install pane of the Lumine settings or run `lumine --install lumine-code/package-generator`.
+
+## Commands
+
+Commands available in `lumine-workspace`:
+
+- `package-generator:generate-package`: create a JavaScript package.
+- `package-generator:generate-language-package`: create a language grammar package.
+- `package-generator:generate-syntax-theme`: create a syntax theme package.
+
+## Configuration
+
+- `package-generator.createInDevMode`: link generated projects in `packages-dev` instead of `packages`.
+
+## Contributing
+
+Got ideas to make this package better, found a bug, or want to help add new features? Just drop your thoughts on GitHub. Any feedback is welcome!

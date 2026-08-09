@@ -1,0 +1,26 @@
+{
+  "menu": [
+    {
+      "label": "Packages",
+      "submenu": [
+        {
+          "label": "Package Generator",
+          "submenu": [
+            {
+              "label": "Generate Package",
+              "command": "package-generator:generate-package"
+            },
+            {
+              "label": "Generate Language Package",
+              "command": "package-generator:generate-language-package"
+            },
+            {
+              "label": "Generate Syntax Theme",
+              "command": "package-generator:generate-syntax-theme"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
