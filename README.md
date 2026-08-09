@@ -18,13 +18,19 @@ To install `package-generator` search for _package-generator_ in the Install pan
 
 Commands available in `lumine-workspace`:
 
-- `package-generator:generate-package`: create a JavaScript package.
-- `package-generator:generate-language-package`: create a language grammar package.
+- `package-generator:generate-package`: create a JavaScript package,
+- `package-generator:generate-language-package`: create a language grammar package,
 - `package-generator:generate-syntax-theme`: create a syntax theme package.
 
-## Configuration
+## Customization
 
-- `package-generator.createInDevMode`: link generated projects in `packages-dev` instead of `packages`.
+Adjust the generator dialog in your `styles.css`:
+
+```css
+.package-generator {
+  --syntax-accent: var(--text-color-info);
+}
+```
 
 ## Contributing
 
