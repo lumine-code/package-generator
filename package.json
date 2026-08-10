@@ -19,8 +19,7 @@
   "files": [
     "lib",
     "menus",
-    "spec",
-    "styles"
+    "spec"
   ],
   "engines": {
     "lumine": "^1.0.0"
