@@ -59,7 +59,7 @@ describe("generated scaffolds", () => {
     expect(manifest.engines).toEqual({ lumine: "^1.0.0" });
     expect(manifest.activationCommands["lumine-workspace"]).toEqual(["sample-tools:toggle"]);
     expect(fs.existsSync(path.join(target, "lib", "main.js"))).toBe(true);
-    expect(fs.existsSync(path.join(target, "styles", "sample-tools.css"))).toBe(true);
+    expect(fs.existsSync(path.join(target, "styles", "main.css"))).toBe(true);
   });
 
   it("creates a JSON language grammar", async () => {
