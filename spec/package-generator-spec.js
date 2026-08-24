@@ -59,7 +59,8 @@ describe("generated scaffolds", () => {
     expect(manifest.engines).toEqual({ lumine: "^1.0.0" });
     expect(manifest.activationCommands["lumine-workspace"]).toEqual(["sample-tools:toggle"]);
     expect(fs.existsSync(path.join(target, "lib", "main.js"))).toBe(true);
-    expect(fs.existsSync(path.join(target, "styles", "main.css"))).toBe(true);
+    const stylesheet = fs.readFileSync(path.join(target, "styles", "main.css"), "utf8");
+    expect(stylesheet).toContain("--sample-tools-accent-color: var(--accent-color);");
   });
 
   it("creates a JSON language grammar", async () => {

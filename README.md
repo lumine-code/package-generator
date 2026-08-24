@@ -24,11 +24,11 @@ Commands available in `lumine-workspace`:
 
 ## Customization
 
-Adjust the generator dialog in your `styles.css`:
+Generated editor packages seed their package-local accent hook from the UI accent:
 
 ```css
-.package-generator {
-  --syntax-accent: var(--text-color-info);
+:root {
+  --your-package-accent-color: var(--accent-color);
 }
 ```
 
