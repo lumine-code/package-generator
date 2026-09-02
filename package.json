@@ -2,12 +2,11 @@
   "name": "package-generator",
   "author": "lumine-code",
   "version": "1.0.0",
-  "description": "Generate ready-to-edit packages, languages, and syntax themes.",
+  "description": "Generate ready-to-edit packages and syntax themes.",
   "keywords": [
     "scaffolding",
     "template",
     "development",
-    "language",
     "theme"
   ],
   "repository": "https://github.com/lumine-code/package-generator",
@@ -36,7 +35,6 @@
   "activationCommands": {
     "lumine-workspace": [
       "package-generator:generate-package",
-      "package-generator:generate-language-package",
       "package-generator:generate-syntax-theme"
     ]
   },

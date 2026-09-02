@@ -25,9 +25,8 @@ describe("Package Generator", () => {
     expect(view.miniEditor.getSelectedText()).toBe("my-package");
   });
 
-  it("selects only the customizable language name", () => {
-    view.attach("language");
-    expect(view.miniEditor.getSelectedText()).toBe("my-language");
+  it("rejects the removed language generator mode", () => {
+    expect(() => view.attach("language")).toThrowError(/Unknown generator mode/);
   });
 
   it("normalizes package names to lowercase dashes", () => {
@@ -63,13 +62,12 @@ describe("generated scaffolds", () => {
     expect(stylesheet).toContain("--sample-tools-accent-color: var(--accent-color);");
   });
 
-  it("creates a JSON language grammar", async () => {
-    const target = await generate("language", "language-sample");
-    const grammar = JSON.parse(
-      fs.readFileSync(path.join(target, "grammars", "sample.json"), "utf8"),
+  it("does not offer a parserless language scaffold", async () => {
+    const target = path.join(root, "language-sample");
+    await expectAsync(generatePackage("language", target)).toBeRejectedWithError(
+      /Unknown generator mode/,
     );
-    expect(grammar.scopeName).toBe("source.sample");
-    expect(grammar.patterns).toEqual([]);
+    expect(fs.existsSync(target)).toBe(false);
   });
 
   it("creates a CSS syntax theme", async () => {
