@@ -20,7 +20,7 @@ Commands available in `lumine-workspace`:
 - `package-generator:generate-package`: create a JavaScript package,
 - `package-generator:generate-syntax-theme`: create a syntax theme package.
 
-Tree-sitter language packages require a real parser, queries and capture fixtures, so maintainers create them with the dedicated `.dev/grammar-authoring/new-grammar-package.js` workflow in a full Lumine workspace rather than this general-purpose generator.
+Tree-sitter language packages require a real parser, queries and capture fixtures, so maintainers create them with `lem grammar new` in a full Lumine workspace rather than this general-purpose generator.
 
 ## Customization
 
