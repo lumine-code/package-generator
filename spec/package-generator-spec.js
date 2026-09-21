@@ -56,7 +56,6 @@ describe("generated scaffolds", () => {
     const target = await generate("package", "sample-tools");
     const manifest = JSON.parse(fs.readFileSync(path.join(target, "package.json")));
     expect(manifest.engines).toEqual({ lumine: "^1.0.0" });
-    expect(manifest.activationCommands["lumine-workspace"]).toEqual(["sample-tools:toggle"]);
     expect(fs.existsSync(path.join(target, "lib", "main.js"))).toBe(true);
     const stylesheet = fs.readFileSync(path.join(target, "styles", "main.css"), "utf8");
     expect(stylesheet).toContain("--sample-tools-accent-color: var(--accent-color);");

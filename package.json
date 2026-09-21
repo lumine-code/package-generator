@@ -32,12 +32,6 @@
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },
-  "activationCommands": {
-    "lumine-workspace": [
-      "package-generator:generate-package",
-      "package-generator:generate-syntax-theme"
-    ]
-  },
   "configSchema": {
     "createInDevMode": {
       "title": "Link Generated Packages in Development Mode",
