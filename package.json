@@ -23,9 +23,6 @@
   "engines": {
     "lumine": "^1.0.0"
   },
-  "backgroundTips": [
-    "{% if keys['package-generator:generate-package'] %}You can generate a new package scaffold with {{ 'package-generator:generate-package' | keystroke }}{% else %}You can generate ready-to-edit project scaffolds from the Packages menu.{% endif %}"
-  ],
   "scripts": {
     "test": "lumine --test spec",
     "lint": "eslint . --max-warnings 0",
@@ -38,6 +35,13 @@
       "description": "Link generated packages in packages-dev instead of the normal packages directory.",
       "type": "boolean",
       "default": false
+    }
+  },
+  "providedServices": {
+    "background-tips.provider": {
+      "versions": {
+        "1.0.0": "provideBackgroundTips"
+      }
     }
   },
   "devDependencies": {

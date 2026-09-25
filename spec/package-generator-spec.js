@@ -56,7 +56,13 @@ describe("generated scaffolds", () => {
     const target = await generate("package", "sample-tools");
     const manifest = JSON.parse(fs.readFileSync(path.join(target, "package.json")));
     expect(manifest.engines).toEqual({ lumine: "^1.0.0" });
+    expect(manifest.providedServices["background-tips.provider"].versions["1.0.0"]).toBe(
+      "provideBackgroundTips",
+    );
     expect(fs.existsSync(path.join(target, "lib", "main.js"))).toBe(true);
+    const main = fs.readFileSync(path.join(target, "lib", "main.js"), "utf8");
+    expect(main).toContain('packageName: "sample-tools"');
+    expect(main).toContain("sample-tools:toggle");
     const stylesheet = fs.readFileSync(path.join(target, "styles", "main.css"), "utf8");
     expect(stylesheet).toContain("--sample-tools-accent-color: var(--accent-color);");
   });
