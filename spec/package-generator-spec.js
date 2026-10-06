@@ -64,7 +64,7 @@ describe("generated scaffolds", () => {
     expect(main).toContain('packageName: "sample-tools"');
     expect(main).toContain("sample-tools:toggle");
     const stylesheet = fs.readFileSync(path.join(target, "styles", "main.css"), "utf8");
-    expect(stylesheet).toContain("--sample-tools-accent-color: var(--accent-color);");
+    expect(stylesheet).toContain("--sample-tools-accent-color: var(--accent-indicator-color);");
   });
 
   it("does not offer a parserless language scaffold", async () => {

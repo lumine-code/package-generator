@@ -28,7 +28,7 @@ Generated editor packages seed their package-local accent hook from the UI accen
 
 ```css
 :root {
-  --your-package-accent-color: var(--accent-color);
+  --your-package-accent-color: var(--accent-indicator-color);
 }
 ```
 
