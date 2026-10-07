@@ -79,9 +79,24 @@ describe("generated scaffolds", () => {
     const target = await generate("theme", "sample-syntax");
     const manifest = JSON.parse(fs.readFileSync(path.join(target, "package.json"), "utf8"));
     expect(manifest.themes).toEqual([
-      { name: "sample-syntax", theme: "syntax", styles: "styles/variables" },
+      { name: "sample-syntax-night", theme: "syntax", styles: "styles" },
     ]);
     const stylesheet = fs.readFileSync(path.join(target, "styles", "variables.css"), "utf8");
     expect(stylesheet).toContain("--syntax-background-color");
+    await lumine.packages.activatePackage(target);
+    try {
+      await lumine.packages.activatePackage("sample-syntax-night");
+      const probe = document.createElement("span");
+      probe.style.backgroundColor = "var(--syntax-background-color)";
+      document.body.appendChild(probe);
+      try {
+        expect(getComputedStyle(probe).backgroundColor).toBe("rgb(24, 28, 37)");
+      } finally {
+        probe.remove();
+      }
+    } finally {
+      await lumine.packages.deactivatePackage("sample-syntax-night");
+      await lumine.packages.unloadPackage("sample-syntax");
+    }
   });
 });
