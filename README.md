@@ -2,6 +2,8 @@
 
 Generate ready-to-edit packages and syntax themes.
 
+Fork of [pulsar-edit/pulsar](https://github.com/pulsar-edit/pulsar) (`packages/package-generator`).
+
 ## Features
 
 - **Package scaffolds**: creates a JavaScript package with a command, CSS, specs, and current quality tooling.
