@@ -15,6 +15,9 @@
   },
   "license": "MIT",
   "main": "./lib/main",
+  "specPackages": [
+    "background-tips"
+  ],
   "files": [
     "lib",
     "menus",
