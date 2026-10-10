@@ -89,11 +89,26 @@ afterEach(async () => {
     };
     delete env.ELECTRON_RUN_AS_NODE;
     const logPath = path.join(scratch, "scaffold-runtime.log");
+    const electronRoot = path.join(editorRoot, "node_modules", "electron");
+    const electronDist = fs.realpathSync.native(path.join(electronRoot, "dist"));
+    const relativeBinary = fs.readFileSync(path.join(electronRoot, "path.txt"), "utf8").trim();
+    const electronPath = fs.realpathSync.native(path.resolve(electronDist, relativeBinary));
+    const binaryRelative = path.relative(electronDist, electronPath);
+    if (
+      !relativeBinary ||
+      !binaryRelative ||
+      binaryRelative === ".." ||
+      binaryRelative.startsWith(`..${path.sep}`) ||
+      path.isAbsolute(binaryRelative) ||
+      !fs.statSync(electronPath).isFile()
+    ) {
+      throw new Error("The installed main Electron binary must stay inside its known distribution");
+    }
     const fd = fs.openSync(logPath, "wx");
     let result;
     try {
       result = spawnSync(
-        process.execPath,
+        electronPath,
         [
           "--no-sandbox",
           "--enable-logging",
