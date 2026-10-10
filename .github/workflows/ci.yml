@@ -37,13 +37,28 @@ jobs:
       - run: npm ci --ignore-scripts
       - run: npm run lint
       - run: npm run format:check
+      - run: npm audit --audit-level=high
+      - run: npm pack --dry-run
 
   integration:
-    name: Lumine integration specs
-    runs-on: ubuntu-latest
+    name: Lumine integration specs on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
     timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    defaults:
+      run:
+        shell: bash
     env:
       LUMINE_JASMINE_REPORTER: list
+      LUMINE_RESOURCE_PATH: ${{ github.workspace }}/lumine
+      LUMINE_HOME: ${{ github.workspace }}/.package-generator-runtime/home
+      LUMINE_DISABLE_SHELLING_OUT_FOR_ENVIRONMENT: "true"
+      TEMP: ${{ github.workspace }}/.package-generator-runtime/tmp
+      TMP: ${{ github.workspace }}/.package-generator-runtime/tmp
+      TMPDIR: ${{ github.workspace }}/.package-generator-runtime/tmp
     steps:
       - uses: actions/checkout@v7
         with:
@@ -57,10 +72,15 @@ jobs:
           node-version-file: lumine/.nvmrc
           cache: npm
           cache-dependency-path: lumine/package-lock.json
+      - name: Create private runtime directories
+        run: mkdir -p "$LUMINE_HOME/electronUserData" "$TEMP"
       - name: Install Linux build and headless-display dependencies
+        if: runner.os == 'Linux'
         run: |
           sudo apt-get update || true
           sudo apt-get install -y xvfb libx11-dev libxkbfile-dev libsecret-1-dev
+      - name: Use HTTPS for GitHub git dependencies
+        run: git config --global url."https://github.com/".insteadOf "ssh://git@github.com/"
       - name: Install package dependencies
         working-directory: package-generator
         run: npm ci --ignore-scripts
@@ -77,8 +97,13 @@ jobs:
         run: npm run build
       - name: Install spec dependency packages
         working-directory: lumine
-        run: node script/install-spec-packages.js --package ../package-generator --home "$RUNNER_TEMP/lumine-home" --github-env "$GITHUB_ENV"
+        run: node script/install-spec-packages.js --package ../package-generator --home "$LUMINE_HOME" --github-env "$GITHUB_ENV"
       - name: Run the Jasmine spec suite
         working-directory: lumine
         timeout-minutes: 20
-        run: xvfb-run --auto-servernum npm start -- --test ../package-generator/spec
+        run: |
+          if [ "$RUNNER_OS" = "Linux" ]; then
+            xvfb-run --auto-servernum npm start -- --test ../package-generator/spec
+          else
+            npm start -- --test ../package-generator/spec
+          fi
