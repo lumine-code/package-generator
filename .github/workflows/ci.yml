@@ -55,6 +55,8 @@ jobs:
       LUMINE_JASMINE_REPORTER: list
       LUMINE_RESOURCE_PATH: ${{ github.workspace }}/lumine
       LUMINE_HOME: ${{ github.workspace }}/.package-generator-runtime/home
+      HOME: ${{ github.workspace }}/.package-generator-runtime/home
+      USERPROFILE: ${{ github.workspace }}/.package-generator-runtime/home
       LUMINE_DISABLE_SHELLING_OUT_FOR_ENVIRONMENT: "true"
       TEMP: ${{ github.workspace }}/.package-generator-runtime/tmp
       TMP: ${{ github.workspace }}/.package-generator-runtime/tmp
