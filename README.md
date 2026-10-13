@@ -11,6 +11,8 @@ Fork of [pulsar-edit/pulsar](https://github.com/pulsar-edit/pulsar) (`packages/p
 - **Development links**: links generated projects into `packages` or `packages-dev` without overwriting an existing entry.
 - **Project handoff**: adds the generated project to the current workspace immediately.
 
+![Choose a destination for a new package scaffold.](.github/demo.png)
+
 ## Installation
 
 To install `package-generator` search for it in the Install pane of the Lumine settings, or run the command `lumine --install lumine-code/package-generator`.

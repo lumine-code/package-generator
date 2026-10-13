@@ -1,0 +1,17 @@
+{
+  "title": "package-generator",
+  "description": "Choose a destination for a new package scaffold.",
+  "recordedOn": "2026-10-13",
+  "sourceRevision": "1adf40b86d3cc1c526e5c54c73655df54b4402ca",
+  "mode": "normal",
+  "fontSettings": "default",
+  "themeSourceRevision": "6564a9e21899b5541e9c8f8006f9be6d6d72e6ad",
+  "images": [
+    {
+      "file": "demo.png",
+      "label": "Choose a destination for a new package scaffold.",
+      "width": 1100,
+      "height": 500
+    }
+  ]
+}
