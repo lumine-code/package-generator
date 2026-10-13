@@ -1,6 +1,24 @@
 {
   "menu": [
     {
+      "label": "File",
+      "submenu": [
+        {
+          "label": "New Package",
+          "submenu": [
+            {
+              "label": "Package…",
+              "command": "package-generator:generate-package"
+            },
+            {
+              "label": "Syntax Theme…",
+              "command": "package-generator:generate-syntax-theme"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "label": "Packages",
       "submenu": [
         {
