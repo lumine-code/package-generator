@@ -28,6 +28,9 @@ describe("package-generator confirmed job ownership", () => {
     jasmine.attachToDOM(lumine.views.getView(lumine.workspace));
     const pack = await lumine.packages.activatePackage("package-generator");
     view = pack.mainModule.ensureView();
+    // These cases hold filesystem work after the native template import. Import
+    // ownership is exercised separately by the lazy template suite.
+    await view.loadTemplates();
     directory = fs.mkdtempSync(path.join(os.tmpdir(), "generator-owned-"));
     configDirectory = path.join(directory, "config");
     destination = path.join(directory, "scaffold");
