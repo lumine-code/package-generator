@@ -1,17 +1,66 @@
 {
   "title": "package-generator",
   "description": "Choose a destination for a new package scaffold.",
-  "recordedOn": "2026-10-13",
-  "sourceRevision": "1adf40b86d3cc1c526e5c54c73655df54b4402ca",
+  "recordedOn": "2026-10-14",
+  "sourceRevision": "327c5faeec23ac8a61fc6fc4ce0cdf761715b7e4",
+  "themeSourceRevision": "7fbd047a87ecf1367c896b19ff270cdc28d319f7",
   "mode": "normal",
   "fontSettings": "default",
-  "themeSourceRevision": "6564a9e21899b5541e9c8f8006f9be6d6d72e6ad",
+  "scenario": "demo.js",
+  "recipeHash": "7ab7b1a8e25f5c509fc5d297b2895e7b261babf8f715d789e1c00de7727df36c",
+  "environment": {
+    "platform": "win32",
+    "arch": "x64",
+    "electron": "44.7.0",
+    "chrome": "152.0.7977.130",
+    "devicePixelRatio": 1,
+    "locale": "en-GB",
+    "fontFamily": "Fira Code, Menlo, DejaVu Sans Mono, Consolas, monospace",
+    "fontSize": 14,
+    "themes": ["one-day-syntax", "one-day-ui"]
+  },
+  "viewport": { "width": 1100, "height": 500 },
+  "cornerRadius": 10,
+  "sources": {
+    "editor": {
+      "revision": "f843acddbced9b8bd7bbe0a96005bb55429694ce",
+      "dirty": false,
+      "workingTreeHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "package": {
+      "revision": "327c5faeec23ac8a61fc6fc4ce0cdf761715b7e4",
+      "dirty": false,
+      "workingTreeHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "package-generator": {
+      "revision": "327c5faeec23ac8a61fc6fc4ce0cdf761715b7e4",
+      "dirty": false,
+      "workingTreeHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "language-gfm": {
+      "revision": "be723ccf806fdd4a2a06638f6e881c09a53b4409",
+      "dirty": false,
+      "workingTreeHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "one-theme": {
+      "revision": "7fbd047a87ecf1367c896b19ff270cdc28d319f7",
+      "dirty": false,
+      "workingTreeHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    }
+  },
+  "fixtures": [
+    {
+      "file": "more/README.md",
+      "sha256": "ea8b9ffc4ba2581e49f26db71950f3bff3f579ae314f3b21c98a58341f07b698"
+    }
+  ],
   "images": [
     {
       "file": "demo.png",
       "label": "Choose a destination for a new package scaffold.",
       "width": 1100,
-      "height": 500
+      "height": 500,
+      "sha256": "4478716ed3469ef6c05563e81701431f0f137a2873a1f0420b7664a340586c38"
     }
   ]
 }
