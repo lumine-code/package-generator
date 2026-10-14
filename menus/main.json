@@ -1,7 +1,7 @@
 {
   "menu": [
     {
-      "label": "File",
+      "label": "Developer",
       "submenu": [
         {
           "label": "New Package",
@@ -15,8 +15,8 @@
               "command": "package-generator:generate-syntax-theme"
             }
           ],
-          "group": "new",
-          "order": 30
+          "group": "authoring",
+          "order": 10
         }
       ]
     },
