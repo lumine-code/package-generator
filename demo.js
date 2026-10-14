@@ -15,7 +15,8 @@ module.exports = {
       file: "demo.png",
       caption: "Choose a destination for a new package scaffold.",
       timeout: 60000,
-      async run(context) {
+      async run() {},
+      async afterPointerMove(context) {
         const { lumine, state, fixture } = context;
         {
           lumine.commands.dispatch(
@@ -25,6 +26,9 @@ module.exports = {
           lumine.packages
             .getActivePackage("package-generator")
             .mainModule.view.miniEditor.setText(fixture("signal-tools"));
+          lumine.packages
+            .getActivePackage("package-generator")
+            .mainModule.view.miniEditor.moveToEndOfLine();
         }
       },
       ready() {
