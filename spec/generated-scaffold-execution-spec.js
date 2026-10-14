@@ -72,7 +72,9 @@ afterEach(async () => {
 });
 `,
     );
-    const editorRoot = process.env.LUMINE_RESOURCE_PATH;
+    // Fleet CI runs the source artifact directly and need not override its
+    // location through the environment. Launch the editor actually under test.
+    const editorRoot = lumine.application.getResourcePath();
     if (!editorRoot || !fs.existsSync(path.join(editorRoot, "package.json"))) {
       throw new Error("Actual editor source checkout is required for the owned scaffold test");
     }
