@@ -1,6 +1,7 @@
 const fs = require("node:fs");
 const os = require("node:os");
 const path = require("node:path");
+const { spawnSync } = require("node:child_process");
 const PackageGeneratorView = require("../lib/package-generator-view");
 const { generatePackage } = require("../lib/templates");
 
@@ -52,8 +53,66 @@ describe("generated scaffolds", () => {
     return target;
   }
 
+  function expectPrivateFilesIgnored(target) {
+    const git = (args, input) =>
+      spawnSync("git", ["-c", "core.excludesFile=", ...args], {
+        cwd: target,
+        encoding: "utf8",
+        input,
+      });
+    const initialized = git(["init", "--quiet", "--template="]);
+    expect(initialized.status).toBe(0);
+    const privateFiles = [
+      "node_modules/demo/index.js",
+      ".env",
+      ".env.local",
+      ".npmrc",
+      ".pypirc",
+      ".netrc",
+      "id_rsa",
+      "id_ed25519",
+      "secret-store.json",
+      ".aws/credentials",
+      ".ssh/id_rsa",
+      ".ipython/profile_default/history.sqlite",
+      ".jupyter/jupyter_server_config.json",
+      ".dev/session.json",
+      "capture-profile/config.json",
+      "state-store/state.json",
+      ".idea/workspace.xml",
+      "project.creator.user",
+      "spec/fixtures/.env",
+      "spec/fixtures/.env.local",
+      "spec/fixtures/.npmrc",
+      "spec/fixtures/id_rsa",
+      "spec/fixtures/secret-store.json",
+      "spec/fixtures/project.creator.user",
+    ];
+    const ignored = git(
+      ["check-ignore", "--no-index", "--stdin", "-z"],
+      `${privateFiles.join("\0")}\0`,
+    );
+    expect(ignored.status).toBe(0);
+    expect(ignored.stdout.split("\0").filter(Boolean).sort()).toEqual(privateFiles.toSorted());
+    const examples = [
+      ".env.example",
+      ".env.sample",
+      ".env.template",
+      "spec/fixtures/.env.example",
+      "spec/fixtures/.env.sample",
+      "spec/fixtures/.env.template",
+    ];
+    const allowed = git(
+      ["check-ignore", "--no-index", "--stdin", "-z"],
+      `${examples.join("\0")}\0`,
+    );
+    expect(allowed.status).toBe(1);
+    expect(allowed.stdout).toBe("");
+  }
+
   it("creates a modern editor package", async () => {
     const target = await generate("package", "sample-tools");
+    expectPrivateFilesIgnored(target);
     const manifest = JSON.parse(fs.readFileSync(path.join(target, "package.json")));
     expect(manifest.engines).toEqual({ lumine: "^1.0.0" });
     expect(manifest.providedServices["background-tips.provider"].versions["1.0.0"]).toBe(
@@ -77,6 +136,7 @@ describe("generated scaffolds", () => {
 
   it("creates a CSS syntax theme", async () => {
     const target = await generate("theme", "sample-syntax");
+    expectPrivateFilesIgnored(target);
     const manifest = JSON.parse(fs.readFileSync(path.join(target, "package.json"), "utf8"));
     expect(manifest.themes).toEqual([
       { name: "sample-syntax-night", theme: "syntax", styles: "styles" },
