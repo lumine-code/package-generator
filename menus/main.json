@@ -27,11 +27,11 @@
           "label": "Package Generator",
           "submenu": [
             {
-              "label": "Generate Package",
+              "label": "Generate Package…",
               "command": "package-generator:generate-package"
             },
             {
-              "label": "Generate Syntax Theme",
+              "label": "Generate Syntax Theme…",
               "command": "package-generator:generate-syntax-theme"
             }
           ]
