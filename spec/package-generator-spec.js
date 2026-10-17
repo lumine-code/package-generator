@@ -114,6 +114,7 @@ describe("generated scaffolds", () => {
     const target = await generate("package", "sample-tools");
     expectPrivateFilesIgnored(target);
     const manifest = JSON.parse(fs.readFileSync(path.join(target, "package.json")));
+    expect(manifest.files).toContain("THIRD_PARTY_NOTICES");
     expect(manifest.engines).toEqual({ lumine: "^1.0.0" });
     expect(manifest.providedServices["background-tips.provider"].versions["1.0.0"]).toBe(
       "provideBackgroundTips",
@@ -138,6 +139,7 @@ describe("generated scaffolds", () => {
     const target = await generate("theme", "sample-syntax");
     expectPrivateFilesIgnored(target);
     const manifest = JSON.parse(fs.readFileSync(path.join(target, "package.json"), "utf8"));
+    expect(manifest.files).toContain("THIRD_PARTY_NOTICES");
     expect(manifest.themes).toEqual([
       { name: "sample-syntax-night", theme: "syntax", styles: "styles" },
     ]);
