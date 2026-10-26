@@ -36,6 +36,8 @@ Generated editor packages seed their package-local accent hook from the UI accen
 }
 ```
 
+Destination paths are limited to 32768 UTF-16 units before extraction or filesystem work. Oversized drafts remain intact and confirmation becomes available after the path is shortened.
+
 ## Contributing
 
 Got ideas to make this package better, found a bug, or want to help add new features? Just drop your thoughts on GitHub. Any feedback is welcome!
