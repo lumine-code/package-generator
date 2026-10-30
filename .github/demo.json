@@ -1,9 +1,9 @@
 {
   "title": "package-generator",
   "description": "Choose a destination for a new package scaffold.",
-  "recordedOn": "2026-10-14",
-  "sourceRevision": "5dd4a2cf1a8e725efffcef1947526a4532aaaa35",
-  "themeSourceRevision": "828c35ac1816466699effa6f7cf7eedccc930ff9",
+  "recordedOn": "2026-10-30",
+  "sourceRevision": "a882d3e0d541bc737dc65298067a5b522b48003f",
+  "themeSourceRevision": "484213c82bbf567e2cb7cd5f85c5d73965346809",
   "mode": "normal",
   "fontSettings": "default",
   "scenario": "demo.js",
@@ -11,8 +11,8 @@
   "environment": {
     "platform": "win32",
     "arch": "x64",
-    "electron": "44.7.1",
-    "chrome": "152.0.7977.149",
+    "electron": "45.0.0",
+    "chrome": "156.0.8078.48",
     "devicePixelRatio": 1,
     "locale": "en-GB",
     "fontFamily": "Fira Code, Menlo, DejaVu Sans Mono, Consolas, monospace",
@@ -24,27 +24,27 @@
   "privacy": { "version": 1, "location": "neutral", "textChecked": true },
   "sources": {
     "editor": {
-      "revision": "fc760fff166d15ab2b93facd99b15048633cac93",
+      "revision": "f6fd84b6cf089f806bf8242332a1a3a740d1bddc",
       "dirty": false,
       "workingTreeHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
     },
     "package": {
-      "revision": "5dd4a2cf1a8e725efffcef1947526a4532aaaa35",
-      "dirty": true,
-      "workingTreeHash": "83b6b6c0b888831cf83128f09c3cb4b7017ebd7147c004da7bc68964a4c15204"
+      "revision": "a882d3e0d541bc737dc65298067a5b522b48003f",
+      "dirty": false,
+      "workingTreeHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
     },
     "package-generator": {
-      "revision": "5dd4a2cf1a8e725efffcef1947526a4532aaaa35",
-      "dirty": true,
-      "workingTreeHash": "83b6b6c0b888831cf83128f09c3cb4b7017ebd7147c004da7bc68964a4c15204"
+      "revision": "a882d3e0d541bc737dc65298067a5b522b48003f",
+      "dirty": false,
+      "workingTreeHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
     },
     "language-gfm": {
-      "revision": "038f14e009527cac11853cf3477e0d531757527f",
-      "dirty": true,
-      "workingTreeHash": "544bcf00c948e5f32c1e3dbd8b7ef76bcc72d20a7d0070c62fc4adb139e96459"
+      "revision": "e2eca2b15d854161c670e5b8815ad48e636957b7",
+      "dirty": false,
+      "workingTreeHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
     },
     "one-theme": {
-      "revision": "828c35ac1816466699effa6f7cf7eedccc930ff9",
+      "revision": "484213c82bbf567e2cb7cd5f85c5d73965346809",
       "dirty": false,
       "workingTreeHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
     }
@@ -61,7 +61,7 @@
       "label": "Choose a destination for a new package scaffold.",
       "width": 1100,
       "height": 500,
-      "sha256": "a906a555b2e47bb1ae4ccf5d6c7b0a68dde26d865fbead3544e0a3cdf6567338"
+      "sha256": "d5133f53d0d6549319fdd176d5b1258be512c54f87e98152ee804aaa3123f834"
     }
   ]
 }
